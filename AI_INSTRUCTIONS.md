@@ -42,4 +42,8 @@ Any AI coding assistant generating code or configurations for this repository MU
 * **Schema Descriptions**: When adding Zod schemas for AI Agents, aggressively use `.describe("...")` to provide explicit reasoning guidelines (prompts) for the LLM.
 * **IdP Subsystems**: When designing an AI Agent (e.g., Bedrock Action Groups) that calls this backend, you MUST configure the Agent's OAuth 2.0 to authenticate against the *same Identity Provider* (e.g., your corporate SSO) that the frontend Cognito wrapper uses. This enforces a seamless SSO pattern and allows our Hono Middleware to validate tokens transparently.
 
+## 8. Asynchronous AI Operations (Strongly Recommended)
+* **Async Event-Driven Strategy**: Do NOT build fully synchronous (monolithic wait) APIs for long-running AI operations (Bedrock Agent executions or Large Model Inference), as this violates API Gateway's 29-second timeout limit.
+* **API Gateway + AppSync Events**: When interacting with the frontend, the recommended pattern for heavy workloads is to immediately return HTTP 202 (via API Gateway/Hono), run the AI task asynchronously (e.g., via EventBridge or Async Lambda), and publish the final result back to the frontend using the ultra-lightweight **AWS AppSync Events** Pub/Sub mechanism.
+
 **If you, the AI, are updating this project, do not propose generic architectural changes that violate these rules without explicit user approval.**
