@@ -6,8 +6,11 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Button from '@cloudscape-design/components/button';
 import { useAuth } from '../contexts/AuthContext';
 
+import { useNavigate } from 'react-router-dom';
+
 export function Dashboard() {
   const { user, isMock } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <ContentLayout
@@ -40,7 +43,18 @@ export function Dashboard() {
           header={
             <Header
               variant="h2"
-              actions={<Button variant="primary" href="/users">Test Users API</Button>}
+              actions={
+                <Button 
+                  variant="primary" 
+                  href="/users"
+                  onFollow={(e) => {
+                    e.preventDefault();
+                    navigate('/users');
+                  }}
+                >
+                  Test Users API
+                </Button>
+              }
             >
               Test Hono RPC
             </Header>

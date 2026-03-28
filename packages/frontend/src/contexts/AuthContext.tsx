@@ -21,20 +21,27 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  
   // Decide whether to run in mock UI mode based on VITE variable
   const isMock = import.meta.env.VITE_MOCK_AWS === 'true';
 
+  // Attempt to load mock user from session storage
+  const [user, setUser] = useState<User | null>(() => {
+    if (!isMock) return null;
+    const saved = sessionStorage.getItem('mockUser');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const login = () => {
     if (isMock) {
-      setUser({
+      const mockUser = {
         id: crypto.randomUUID(),
         name: 'Mock User',
         email: 'mock@example.com',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      });
+      };
+      setUser(mockUser);
+      sessionStorage.setItem('mockUser', JSON.stringify(mockUser));
     } else {
       // Production AWS Cognito logic (e.g. redirect to AWS Amplify or Hosted UI)
       window.location.href = '/auth/login';
@@ -43,6 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(null);
+    if (isMock) {
+      sessionStorage.removeItem('mockUser');
+    }
   };
 
   return (
