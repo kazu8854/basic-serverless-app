@@ -4,4 +4,17 @@ build/
 .env
 .env.local
 cdk.out/
+.cdk.staging/
 .DS_Store
+
+# Build artifacts
+*.log
+*.js.map
+coverage/
+
+# TypeScript compiled output in infrastructure/shared (source is .ts)
+packages/infrastructure/**/*.js
+packages/infrastructure/**/*.d.ts
+packages/shared/**/*.js
+packages/shared/**/*.d.ts
+!packages/infrastructure/jest.config.js

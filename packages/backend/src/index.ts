@@ -1,44 +1,44 @@
 import { Hono } from 'hono';
 import { handle } from 'hono/aws-lambda';
-import { User, CreateUserSchema, ApiResponse } from '@basic-serverless-app/shared';
+import { CreateUserSchema } from '@basic-serverless-app/shared';
+import { MockDbAdapter } from './adapters/mock-db-adapter';
+import { UserUsecase } from './usecases/user-usecase';
 
+// --- Dependency Injection (Ports and Adapters) ---
+// Switch adapter based on environment variable.
+// In production Lambda, replace MockDbAdapter with AwsDynamoDbAdapter.
+const isMock = process.env.MOCK_AWS === 'true';
+const dbAdapter = isMock ? new MockDbAdapter() : new MockDbAdapter(); // TODO: replace second with AwsDynamoDbAdapter
+
+const userUsecase = new UserUsecase(dbAdapter);
+
+// --- Hono Application ---
 const app = new Hono();
-
-// A simple in-memory mock DB adapter (for local dev dev:mock)
-const mockDb = new Map<string, User>();
 
 app.get('/api/users/:id', async (c) => {
   const id = c.req.param('id');
-  const user = mockDb.get(id);
-  
-  if (!user) {
-    const errorRes: ApiResponse<null> = { success: false, error: 'User not found' };
-    return c.json(errorRes, 404);
+  const result = await userUsecase.getUser(id);
+
+  if (!result.success) {
+    return c.json(result, 404);
   }
-  
-  const res: ApiResponse<User> = { success: true, data: user };
-  return c.json(res);
+  return c.json(result);
 });
 
 app.post('/api/users', async (c) => {
   const body = await c.req.json();
   const parsed = CreateUserSchema.safeParse(body);
-  
+
   if (!parsed.success) {
-    return c.json({ success: false, error: 'Invalid input' }, 400);
+    return c.json({ success: false, error: 'Invalid input', details: parsed.error.flatten() }, 400);
   }
-  
-  const newUser: User = {
-    id: crypto.randomUUID(),
-    ...parsed.data,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-  
-  mockDb.set(newUser.id, newUser);
-  
-  const res: ApiResponse<User> = { success: true, data: newUser };
-  return c.json(res, 201);
+
+  const result = await userUsecase.createUser(parsed.data);
+  return c.json(result, 201);
+});
+
+app.get('/api/health', (c) => {
+  return c.json({ status: 'ok', mock: isMock });
 });
 
 // The exported handler for AWS Lambda (via CDK)

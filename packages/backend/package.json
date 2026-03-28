@@ -4,19 +4,21 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "dev:mock": "MOCK_AWS=true node --require ts-node/register src/dev.ts",
+    "dev:mock": "MOCK_AWS=true npx tsx src/dev.ts",
+    "dev:aws": "npx tsx src/dev.ts",
     "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests yet\" && exit 0"
   },
   "dependencies": {
-    "hono": "^4.2.4",
-    "@basic-serverless-app/shared": "*"
+    "@basic-serverless-app/shared": "*",
+    "@hono/node-server": "^1.19.11",
+    "hono": "^4.2.4"
   },
   "devDependencies": {
-    "typescript": "^5.3.3",
-    "ts-node": "^10.9.2",
+    "@types/aws-lambda": "^8.10.137",
     "@types/node": "^20.0.0",
     "esbuild": "^0.20.0",
-    "@types/aws-lambda": "^8.10.137"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }
