@@ -40,6 +40,6 @@ Any AI coding assistant generating code or configurations for this repository MU
 ## 7. AI Agent & MCP Integration (Recommended)
 * **Agent Integration Philosophy**: Usecases MUST be pure enough to be reused for AI Action Groups (e.g., AWS Bedrock Agents). 
 * **Schema Descriptions**: When adding Zod schemas for AI Agents, aggressively use `.describe("...")` to provide explicit reasoning guidelines (prompts) for the LLM.
-* **IdP Subsystems**: When designing an AI Agent (e.g., Bedrock Action Groups) that calls this backend, you MUST configure the Agent's OAuth 2.0 to authenticate against the *same Identity Provider* (e.g., Midway) that the frontend Cognito wrapper uses. This enforces a seamless SSO pattern and allows our Hono Middleware to validate tokens transparently.
+* **IdP Subsystems**: When designing an AI Agent (e.g., Bedrock Action Groups) that calls this backend, you MUST configure the Agent's OAuth 2.0 to authenticate against the *same Identity Provider* (e.g., your corporate SSO) that the frontend Cognito wrapper uses. This enforces a seamless SSO pattern and allows our Hono Middleware to validate tokens transparently.
 
 **If you, the AI, are updating this project, do not propose generic architectural changes that violate these rules without explicit user approval.**
