@@ -1,20 +1,53 @@
+# === Dependencies ===
 node_modules/
+
+# === Build output ===
 dist/
 build/
+*.tsbuildinfo
+
+# === Environment variables / Secrets ===
 .env
-.env.local
+.env.*
+!.env.example
+
+# === AWS CDK ===
 cdk.out/
 .cdk.staging/
+
+# === OS files ===
 .DS_Store
+Thumbs.db
 
-# Build artifacts
+# === Editor / IDE ===
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# === Logs ===
 *.log
-*.js.map
-coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# TypeScript compiled output in infrastructure/shared (source is .ts)
+# === Test / Coverage ===
+coverage/
+.nyc_output/
+
+# === Source maps ===
+*.js.map
+
+# === TypeScript compiled output (source is .ts) ===
 packages/infrastructure/**/*.js
 packages/infrastructure/**/*.d.ts
 packages/shared/**/*.js
 packages/shared/**/*.d.ts
 !packages/infrastructure/jest.config.js
+
+# === Temporary files ===
+*.tmp
+*.bak
