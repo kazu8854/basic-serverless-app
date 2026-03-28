@@ -112,7 +112,7 @@ npm install
 npm run dev:mock -w packages/backend
 
 # フロントエンド (http://localhost:5173)
-npm run dev -w packages/frontend
+npm run dev:mock -w packages/frontend
 ```
 環境変数 `MOCK_AWS=true` が自動設定され、DynamoDBやCognitoへの通信は一切発生しません。完全オフラインで即座に開発可能です。
 
