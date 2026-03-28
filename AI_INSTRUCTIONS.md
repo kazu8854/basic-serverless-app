@@ -42,7 +42,23 @@ Any AI coding assistant generating code or configurations for this repository MU
 * **Schema Descriptions**: When adding Zod schemas for AI Agents, aggressively use `.describe("...")` to provide explicit reasoning guidelines (prompts) for the LLM.
 * **IdP Subsystems**: When designing an AI Agent (e.g., Bedrock Action Groups) that calls this backend, you MUST configure the Agent's OAuth 2.0 to authenticate against the *same Identity Provider* (e.g., your corporate SSO) that the frontend Cognito wrapper uses. This enforces a seamless SSO pattern and allows our Hono Middleware to validate tokens transparently.
 
-## 8. Asynchronous AI Operations (Strongly Recommended)
+## 8. Routing & API Client (MUST)
+* **Backend Route Splitting (Domain Structure)**: When adding a new domain/feature, you MUST create a sub-router in `packages/backend/src/api/<domain>.ts`.
+  * Instantiate the Usecase and adapters at the top of the domain file.
+  * Chain `.get()`, `.post()`, etc., on the Hono instance and export it (e.g., `export const domainApp = new Hono()...`).
+  * Mount it in `packages/backend/src/index.ts` using `app.route('/api/<domain>', domainApp)` to preserve the deeply nested type tree for Hono RPC.
+* **Frontend API Client**: Frontend MUST interact with the backend exclusively via the deeply typed Hono RPC client located at `packages/frontend/src/api/client.ts`. Avoid manual `fetch` calls.
+
+## 9. Testing & Quality Assurance (MUST)
+* **Framework Split**: 
+  * `packages/infrastructure` (CDK) MUST use **Jest**.
+  * `packages/backend` and `packages/frontend` MUST use **Vitest** for speed and Vite ecosystem alignment.
+* **Testing Methods**:
+  * **Backend**: Write integration tests using Hono's `app.request()` against the `MockDbAdapter` to validate End-to-End API behavior without AWS connections.
+  * **Frontend**: Write component tests using `@testing-library/react` and Vitest.
+* **Coverage**: All added logic MUST include tests. Coverage is generated via `npm run test:coverage`.
+
+## 10. Asynchronous AI Operations (Strongly Recommended)
 * **Async Event-Driven Strategy**: Do NOT build fully synchronous (monolithic wait) APIs for long-running AI operations (Bedrock Agent executions or Large Model Inference), as this violates API Gateway's 29-second timeout limit.
 * **API Gateway + AppSync Events**: When interacting with the frontend, the recommended pattern for heavy workloads is to immediately return HTTP 202 (via API Gateway/Hono), run the AI task asynchronously (e.g., via EventBridge or Async Lambda), and publish the final result back to the frontend using the ultra-lightweight **AWS AppSync Events** Pub/Sub mechanism.
 

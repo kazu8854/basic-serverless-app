@@ -7,7 +7,8 @@
     "dev:mock": "MOCK_AWS=true npx tsx src/dev.ts",
     "dev:aws": "npx tsx src/dev.ts",
     "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js",
-    "test": "echo \"No tests yet\" && exit 0"
+    "test": "MOCK_AWS=true vitest run",
+    "test:coverage": "MOCK_AWS=true vitest run --coverage"
   },
   "dependencies": {
     "@basic-serverless-app/shared": "*",
@@ -17,9 +18,11 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.137",
     "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^4.1.2",
     "esbuild": "^0.20.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^4.1.2"
   }
 }
