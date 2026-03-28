@@ -1,0 +1,14 @@
+{
+  "name": "basic-serverless-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:mock": "npm run dev:mock --workspaces",
+    "dev:aws": "npm run dev:aws --workspaces",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces"
+  }
+}
