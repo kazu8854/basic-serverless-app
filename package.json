@@ -9,6 +9,7 @@
     "dev:mock": "npm run dev:mock --workspaces",
     "dev:aws": "npm run dev:aws --workspaces",
     "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces"
+    "test": "npm run test --workspaces",
+    "deploy": "npm run build && npm run deploy --workspace=infrastructure"
   }
 }
