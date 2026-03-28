@@ -37,4 +37,8 @@ Any AI coding assistant generating code or configurations for this repository MU
   * Recommended to use **Amazon DynamoDB** as the default serverless DB.
   * *Exception*: Database selection should follow the "Right Tool for the Right Job" (適材適所) principle. Always prioritize architectural fit and **Cost Optimization** when proposing database changes.
 
+## 7. AI Agent & MCP Integration (Recommended)
+* **AgentCore Integration**: Recommended to design Backend Usecases (business logic) so they can easily be repurposed as tools for AI Agents (e.g., AgentCore) via the **Model Context Protocol (MCP)**.
+* Extract pure logic / tool-friendly APIs from HTTP handlers to keep them "AI-Ready" (though this is not mandatory for every single endpoint).
+
 **If you, the AI, are updating this project, do not propose generic architectural changes that violate these rules without explicit user approval.**
