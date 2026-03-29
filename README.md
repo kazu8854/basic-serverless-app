@@ -130,12 +130,10 @@ npm install
 
 ### 2. ローカル開発（Mockモード — AWS接続不要）
 ```bash
-# バックエンド (http://localhost:3001)
-npm run dev:mock -w packages/backend
-
-# フロントエンド (http://localhost:5173)
-npm run dev:mock -w packages/frontend
+# Frontend (http://localhost:5173) と Backend (http://localhost:3001) を同時に起動
+npm run dev:mock
 ```
+
 環境変数 `MOCK_AWS=true` が自動設定され、DynamoDBやCognitoへの通信は一切発生しません。完全オフラインで即座に開発可能です。
 
 ### 3. AWSへのデプロイ
