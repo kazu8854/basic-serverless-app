@@ -150,6 +150,16 @@ npm run deploy
 デプロイ完了後、以下のOutputが表示されます：
 * `FrontendUrlOutput` — CloudFrontのURL（本番フロントエンド）
 * `ApiEndpointOutput` — API GatewayのURL（本番バックエンド）
+* `CognitoDomainOutput` — Cognito Hosted UIのドメイン
+
+フロントエンドはビルド時点でAPI/Cognitoのエンドポイントを知りません（デプロイ前にビルドされるため）。
+代わりにCDKが `packages/infrastructure/lib/infrastructure-stack.ts` の中で生成した **`/config.json`** をS3バケット直下に配置し、フロントエンドは起動時にこれをfetchして実行時に読み込みます。そのため `FrontendUrlOutput` を開くだけで、ビルド時の再設定なしにログインとAPI呼び出しが動作します。
+
+**本番の認証（Cognito Hosted UI）:**
+`Sign in` を押すと、Cognito Hosted UIへリダイレクト → OAuth 2.0 Authorization Code + PKCEでコード交換 → 取得したアクセストークンをHono RPCクライアントの `Authorization: Bearer` ヘッダーに自動付与、という流れで動作します（`packages/frontend/src/contexts/AuthContext.tsx` / `src/pages/AuthCallback.tsx`）。バックエンド側は `packages/backend/src/middleware/auth-middleware.ts` がすべての `/api/users/*` リクエストでこのトークンをCognitoに対して検証し、`MOCK_AWS=true` のときのみ検証をスキップします。
+
+**ローカルから本物のAWSバックエンドを叩きたい場合 (`npm run dev:aws`):**
+このモードではフロントエンドはローカルVite開発サーバーで動くため `/config.json` が存在しません。`packages/frontend/.env.example` を `.env` にコピーし、デプロイ後のCfnOutputsの値を設定してください。
 
 ### 4. クリーンアップ（AWS削除）
 ```bash

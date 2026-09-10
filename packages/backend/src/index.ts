@@ -8,8 +8,15 @@ const isMock = process.env.MOCK_AWS === 'true';
 // --- Global Hono Application ---
 const app = new Hono();
 
-// Enable CORS for frontend communication
-app.use('*', cors());
+// Enable CORS for frontend communication.
+// In mock mode any origin is fine (fully local dev). In AWS mode, restrict
+// to the deployed CloudFront domain (FRONTEND_URL, injected by CDK) plus
+// localhost, so `npm run dev:aws` can still talk to a real deployed backend.
+const allowedOrigins = isMock
+  ? '*'
+  : [process.env.FRONTEND_URL, 'http://localhost:5173'].filter((v): v is string => Boolean(v));
+
+app.use('*', cors({ origin: allowedOrigins }));
 
 app.get('/api/health', (c) => {
   return c.json({ status: 'ok', mock: isMock });

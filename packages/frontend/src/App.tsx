@@ -3,12 +3,15 @@ import { AuthProvider } from './contexts/AuthContext';
 import { Layout } from './components/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { Users } from './pages/Users';
+import { AuthCallback } from './pages/AuthCallback';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Cognito Hosted UI redirect_uri — outside Layout, no nav chrome needed */}
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="users" element={<Users />} />

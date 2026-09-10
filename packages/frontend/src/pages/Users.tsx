@@ -7,7 +7,7 @@ import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
 import Alert from '@cloudscape-design/components/alert';
-import { client } from '../api/client';
+import { getClient } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
 
 export function Users() {
@@ -21,8 +21,9 @@ export function Users() {
     setLoading(true);
     setError('');
     try {
-      // End-to-end typed! 
+      // End-to-end typed!
       // If you type client.api.users.$post({ json: { wrong: "field" } }), TS will throw an error immediately!
+      const client = await getClient();
       const res = await client.api.users.$post({
         json: { name: "RPC Test User", email: "rpc@example.com" }
       });
@@ -46,6 +47,7 @@ export function Users() {
     setLoading(true);
     setError('');
     try {
+      const client = await getClient();
       const res = await client.api.users[':id'].$get({
         param: { id: userId || 'test-123' }
       });

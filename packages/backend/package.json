@@ -11,8 +11,11 @@
     "test:coverage": "MOCK_AWS=true vitest run --coverage"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1128.0",
+    "@aws-sdk/lib-dynamodb": "^3.1128.0",
     "@basic-serverless-app/shared": "*",
     "@hono/node-server": "^1.19.11",
+    "aws-jwt-verify": "^5.2.1",
     "hono": "^4.2.4"
   },
   "devDependencies": {
